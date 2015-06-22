@@ -10,9 +10,12 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -32,6 +35,7 @@ public class MainActivity extends Activity implements MainAsyncResponse {
 
     private final static int TIMER_INTERVAL = 1500;
 
+    private DrawerLayout drawerLayout;
     private Wireless wifi;
     private Discovery discovery = new Discovery();
     private ListView hostList;
@@ -55,6 +59,8 @@ public class MainActivity extends Activity implements MainAsyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ImageView drawerIcon = (ImageView) findViewById(R.id.drawerIcon);
+        this.drawerLayout = (DrawerLayout) findViewById(R.id.leftDrawer);
         this.hostList = (ListView) findViewById(R.id.hostList);
         TextView macAddress = (TextView) findViewById(R.id.deviceMacAddress);
         this.internalIp = (TextView) findViewById(R.id.internalIpAddress);
@@ -97,6 +103,18 @@ public class MainActivity extends Activity implements MainAsyncResponse {
         this.intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(receiver, this.intentFilter);
 
+        drawerIcon.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * Click handler to open left navigation drawer from the icon
+             * @param view
+             */
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        });
+
         discoverHosts.setOnClickListener(new View.OnClickListener() {
 
             /**
@@ -105,7 +123,7 @@ public class MainActivity extends Activity implements MainAsyncResponse {
              */
             @Override
             public void onClick(View v) {
-                if(!wifi.isConnected()) {
+                if (!wifi.isConnected()) {
                     Toast.makeText(getApplicationContext(), "You're not connected to a WiFi network!", Toast.LENGTH_SHORT).show();
                     return;
                 }
