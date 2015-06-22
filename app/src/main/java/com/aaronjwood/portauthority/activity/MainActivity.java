@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -36,6 +37,7 @@ public class MainActivity extends Activity implements MainAsyncResponse {
     private final static int TIMER_INTERVAL = 1500;
 
     private DrawerLayout drawerLayout;
+    private ListView drawerList;
     private Wireless wifi;
     private Discovery discovery = new Discovery();
     private ListView hostList;
@@ -59,19 +61,21 @@ public class MainActivity extends Activity implements MainAsyncResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView drawerIcon = (ImageView) findViewById(R.id.drawerIcon);
         this.drawerLayout = (DrawerLayout) findViewById(R.id.leftDrawer);
+        this.drawerList = (ListView) findViewById(R.id.leftDrawerList);
         this.hostList = (ListView) findViewById(R.id.hostList);
-        TextView macAddress = (TextView) findViewById(R.id.deviceMacAddress);
         this.internalIp = (TextView) findViewById(R.id.internalIpAddress);
         this.externalIp = (TextView) findViewById(R.id.externalIpAddress);
         this.signalStrength = (TextView) findViewById(R.id.signalStrength);
-        Button discoverHosts = (Button) findViewById(R.id.discoverHosts);
         this.ssid = (TextView) findViewById(R.id.ssid);
         this.bssid = (TextView) findViewById(R.id.bssid);
-
         this.wifi = new Wireless(this);
 
+        ImageView drawerIcon = (ImageView) findViewById(R.id.drawerIcon);
+        TextView macAddress = (TextView) findViewById(R.id.deviceMacAddress);
+        Button discoverHosts = (Button) findViewById(R.id.discoverHosts);
+
+        this.drawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"Sort Ascending", "Sort Descending", "Settings"}));
         macAddress.setText(this.wifi.getMacAddress());
 
         this.receiver = new BroadcastReceiver() {
